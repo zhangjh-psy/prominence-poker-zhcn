@@ -37,7 +37,9 @@ import config  # noqa: E402
 
 GAME = config.GAME_DIR
 GAME_FONTS = config.GAME_FONTS
-BUILT_LOCRES = config.BUILD_LOCRES
+# 优先用仓库内已构建的产物（CI 无游戏环境也能打包）
+_ASSET_LOCRES = os.path.join(ROOT, "assets", "Game.locres")
+BUILT_LOCRES = _ASSET_LOCRES if os.path.exists(_ASSET_LOCRES) else config.BUILD_LOCRES
 ORIGINAL_LOCRES = config.ORIGINAL_LOCRES
 ORIGINAL_MD5 = "1719eb766ca30a7d625ad3f138b8d84f"
 

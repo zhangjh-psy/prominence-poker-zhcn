@@ -1,7 +1,7 @@
 # 游戏原始资源（版权归发行商，禁止提交）
 backup/
 
-# 构建产物
+# 构建产物（注意：assets/Game.locres 是已构建产物，需入库）
 build/
 dist/
 tmp/
