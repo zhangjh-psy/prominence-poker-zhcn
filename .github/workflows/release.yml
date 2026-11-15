@@ -1,0 +1,46 @@
+name: build-release
+
+on:
+  push:
+    tags:
+      - 'v*'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.11'
+
+      - name: Resolve version
+        id: ver
+        run: |
+          if [ "${GITHUB_REF_TYPE}" = "tag" ]; then
+            echo "v=${GITHUB_REF_NAME#v}" >> "$GITHUB_OUTPUT"
+          else
+            echo "v=0.0.0-dev" >> "$GITHUB_OUTPUT"
+          fi
+
+      - name: Build package
+        run: python tools/build_release.py "${{ steps.ver.outputs.v }}"
+
+      - name: Show output
+        run: ls -lh dist/
+
+      - name: Upload to release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          files: dist/*.zip
+          body: |
+            Prominence Poker 简体中文汉化 ${{ github.ref_name }}
+
+            下载 zip 解压后双击 `一键汉化.bat` 即可安装。
+            详见 README。

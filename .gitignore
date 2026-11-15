@@ -1,0 +1,25 @@
+# 游戏原始资源（版权归发行商，禁止提交）
+backup/
+
+# 构建产物
+build/
+dist/
+tmp/
+out/
+review/
+
+# Python
+__pycache__/
+*.py[cod]
+.venv/
+venv/
+
+# 编辑器 / 系统
+.vscode/
+.idea/
+Thumbs.db
+.DS_Store
+desktop.ini
+
+# 本地工作区数据
+.workbuddy/
