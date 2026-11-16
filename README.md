@@ -8,6 +8,18 @@
 
 ---
 
+## 下载：请认准 Releases
+
+> ### ⚠️ 别点「Code → Download ZIP」
+> 那个按钮下载的是**源代码包**，里面没有打包好的补丁，双击会提示找不到数据。
+> 正确入口在这里 👇
+
+**➡️ [下载汉化补丁](https://github.com/zhangjh-psy/prominence-poker-zhcn/releases/latest)**
+
+进入页面后，下载 `ProminencePoker-zhCN-v*.zip`（约 12 MB），解压即用。
+
+---
+
 ## 给玩家：一键安装
 
 1. 完全退出游戏（任务管理器里也确认没有 `Prominence-Win64-Shipping.exe`）

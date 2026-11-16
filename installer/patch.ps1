@@ -1,12 +1,18 @@
 ﻿#Requires -Version 5.1
 <#
     Prominence Poker 简体中文汉化 · 安装/还原脚本
+
     用法：
         patch.ps1                     交互菜单
         patch.ps1 -Action install     直接安装
         patch.ps1 -Action restore     直接还原
         patch.ps1 -Action status      检查状态
         patch.ps1 -GamePath "D:\..."  指定游戏目录
+
+    两种数据来源：
+        1) 发布包：同目录下有 payload/（manifest.json + locres + fonts）
+        2) 源码包：上层目录有 assets/（Game.locres + 字体子集 + font_targets.txt），
+           运行时现场组装，无需预打包
 #>
 [CmdletBinding()]
 param(
@@ -20,10 +26,12 @@ $ErrorActionPreference = 'Stop'
 try { [Console]::OutputEncoding = [Text.Encoding]::UTF8 } catch { }
 
 $Root         = Split-Path -Parent $MyInvocation.MyCommand.Definition
+$Parent       = Split-Path -Parent $Root
 $PayloadDir   = Join-Path $Root 'payload'
 $ManifestFile = Join-Path $PayloadDir 'manifest.json'
 $BackupName   = '_zhCN_backup'
 $GameExe      = 'Prominence-Win64-Shipping'
+$ReleaseUrl   = 'https://github.com/zhangjh-psy/prominence-poker-zhcn/releases/latest'
 
 # ---------------- 输出辅助 ----------------
 function Write-Title($t) {
@@ -44,11 +52,68 @@ function Pause-Any {
 }
 
 # ---------------- 清单 ----------------
-function Get-Manifest {
-    if (-not (Test-Path $ManifestFile)) {
-        throw "找不到清单文件：$ManifestFile`n请确认解压完整，不要单独移动 patch.ps1。"
+function New-ManifestFromAssets($assets) {
+    $locres  = Join-Path $assets 'Game.locres'
+    $targets = Join-Path $assets 'font_targets.txt'
+    $reg     = Join-Path $assets 'ui_cjk_subset.otf'
+    $bold    = Join-Path $assets 'ui_cjk_subset_bold.otf'
+
+    $list = @()
+    $list += [pscustomobject]@{
+        source = $locres
+        target = 'Prominence/Content/Localization/Game/en/Game.locres'
     }
-    return Get-Content $ManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
+    foreach ($raw in (Get-Content $targets -Encoding UTF8)) {
+        $n = $raw.Trim()
+        if (-not $n) { continue }
+        if ($n -match 'Bold|Heavy|Semi|XtraBold|ExtraBold') { $src = $bold } else { $src = $reg }
+        $list += [pscustomobject]@{ source = $src; target = "Prominence/Content/UI/FONTS/$n" }
+    }
+    foreach ($f in $list) {
+        $f | Add-Member -NotePropertyName size   -NotePropertyValue (Get-Item -LiteralPath $f.source).Length
+        $f | Add-Member -NotePropertyName sha256 -NotePropertyValue (Get-FileHash -LiteralPath $f.source -Algorithm SHA256).Hash.ToLower()
+    }
+    return [pscustomobject]@{
+        version             = 'dev'
+        sourceMode          = $true
+        locres_md5          = (Get-FileHash -LiteralPath $locres -Algorithm MD5).Hash.ToLower()
+        original_locres_md5 = ''
+        files               = $list
+    }
+}
+
+function Get-Manifest {
+    if (Test-Path $ManifestFile) {
+        $m = Get-Content $ManifestFile -Raw -Encoding UTF8 | ConvertFrom-Json
+        foreach ($f in $m.files) {
+            if (-not ($f.PSObject.Properties.Name -contains 'source')) {
+                $f | Add-Member -NotePropertyName source `
+                                -NotePropertyValue (Join-Path $PayloadDir $f.payload)
+            }
+        }
+        return $m
+    }
+
+    # 源码包模式：用仓库内 assets/ 现场组装
+    $assets = Join-Path $Parent 'assets'
+    if ((Test-Path (Join-Path $assets 'Game.locres')) -and
+        (Test-Path (Join-Path $assets 'font_targets.txt')) -and
+        (Test-Path (Join-Path $assets 'ui_cjk_subset.otf'))) {
+        return New-ManifestFromAssets $assets
+    }
+
+    Write-Host ''
+    Write-Err '没有找到补丁数据，无法安装。'
+    Write-Host ''
+    Write-Host '  如果你是点 GitHub 页面的「Code → Download ZIP」下载的，' -ForegroundColor Yellow
+    Write-Host '  得到的是源代码包，里面不含打包好的补丁。' -ForegroundColor Yellow
+    Write-Host ''
+    Write-Host '  请到这个地址下载 Release 中的 zip：' -ForegroundColor White
+    Write-Host "  $ReleaseUrl" -ForegroundColor Cyan
+    Write-Host ''
+    Write-Host '  解压后双击「一键汉化.bat」。' -ForegroundColor Gray
+    Pause-Any
+    exit 2
 }
 
 # ---------------- 定位游戏 ----------------
@@ -79,6 +144,8 @@ function Find-GamePath {
     $cands.Add('C:\Program Files\Steam')
     $cands.Add('D:\Steam')
     $cands.Add('E:\Steam')
+    $cands.Add('F:\Steam')
+    $cands.Add('F:\youxi')
 
     foreach ($lib in $cands) {
         $g = Join-Path $lib 'steamapps\common\Prominence Poker'
@@ -98,7 +165,7 @@ function Ask-GamePath {
         $dlg.Description = '请选择 Prominence Poker 游戏根目录（包含 Prominence 文件夹的那一层）'
         if ($dlg.ShowDialog() -eq 'OK') {
             if (Test-GameDir $dlg.SelectedPath) { return $dlg.SelectedPath }
-            Write-Err "该目录下没有找到 Prominence\Content\Localization\Game\en\Game.locres"
+            Write-Err '该目录下没有找到 Prominence\Content\Localization\Game\en\Game.locres'
         }
     } catch { }
 
@@ -109,9 +176,7 @@ function Ask-GamePath {
 
 function Resolve-Game {
     if ($GamePath -and (Test-GameDir $GamePath)) { return $GamePath }
-    if ($GamePath) {
-        Write-Err "指定的目录无效：$GamePath"
-    }
+    if ($GamePath) { Write-Err "指定的目录无效：$GamePath" }
     $found = Find-GamePath
     if ($found) {
         Write-Ok "已找到游戏：$found"
@@ -160,6 +225,10 @@ function Invoke-Install {
     $manifest = Get-Manifest
     Write-Title ("Prominence Poker 简体中文汉化  v" + $manifest.version)
 
+    if ($manifest.PSObject.Properties.Name -contains 'sourceMode' -and $manifest.sourceMode) {
+        Write-Info '运行于源码包模式（使用仓库 assets/ 现场组装）。'
+    }
+
     if (Test-GameRunning) {
         Write-Err '游戏正在运行，请先完全退出游戏（包括后台进程）再安装。'
         Pause-Any
@@ -174,13 +243,13 @@ function Invoke-Install {
     }
     Write-Info "游戏目录：$game"
 
-    # 版本校验：原始 Game.locres 的 MD5
+    # 版本校验
     $lc = Join-Path $game 'Prominence\Content\Localization\Game\en\Game.locres'
     $curMd5 = (Get-FileHash -LiteralPath $lc -Algorithm MD5).Hash.ToLower()
     if ($curMd5 -eq $manifest.locres_md5.ToLower()) {
         Write-Info '检测到已安装本汉化，将执行覆盖重装。'
     } elseif ($manifest.original_locres_md5 -and $curMd5 -ne $manifest.original_locres_md5.ToLower()) {
-        Write-Warn2 '当前 Game.locres 与预期版本不一致，可能是游戏已更新或已装过其他汉化。'
+        Write-Warn2 '当前 Game.locres 与预期版本不一致，可能是游戏已更新或装过其他汉化。'
         Write-Info '继续安装一般没问题，但若游戏新增了文本，新增部分可能不显示中文。'
         if (-not $Yes) {
             $ans = Read-Host '  仍要继续吗？(y/N)'
@@ -193,10 +262,9 @@ function Invoke-Install {
     Write-Host '  正在校验补丁文件…' -ForegroundColor DarkGray
     $bad = @()
     foreach ($f in $manifest.files) {
-        $src = Join-Path $PayloadDir $f.payload
-        if (-not (Test-Path $src)) { $bad += $f.payload; continue }
-        $h = (Get-FileHash -LiteralPath $src -Algorithm SHA256).Hash.ToLower()
-        if ($h -ne $f.sha256.ToLower()) { $bad += $f.payload }
+        if (-not (Test-Path $f.source)) { $bad += $f.target; continue }
+        $h = (Get-FileHash -LiteralPath $f.source -Algorithm SHA256).Hash.ToLower()
+        if ($h -ne $f.sha256.ToLower()) { $bad += $f.target }
     }
     if ($bad.Count -gt 0) {
         Write-Err ("补丁文件校验失败（" + $bad.Count + " 个），文件可能损坏，请重新下载。")
@@ -214,19 +282,18 @@ function Invoke-Install {
     # 复制
     $ok = 0
     foreach ($f in $manifest.files) {
-        $src = Join-Path $PayloadDir $f.payload
-        $dst = Join-Path $game $f.target
+        $dst  = Join-Path $game $f.target
         $ddir = Split-Path -Parent $dst
         if (-not (Test-Path $ddir)) { New-Item -ItemType Directory -Path $ddir -Force | Out-Null }
-        Copy-Item -LiteralPath $src -Destination $dst -Force
+        Copy-Item -LiteralPath $f.source -Destination $dst -Force
         $ok++
     }
 
     $stamp = [ordered]@{
-        version    = $manifest.version
-        installed  = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
-        game       = $game
-        fileCount  = $ok
+        version   = $manifest.version
+        installed = (Get-Date).ToString('yyyy-MM-dd HH:mm:ss')
+        game      = $game
+        fileCount = $ok
     }
     $stamp | ConvertTo-Json | Set-Content -Path (Join-Path (Get-BackupRoot $game) 'installed.json') -Encoding UTF8
 
@@ -251,9 +318,7 @@ function Invoke-Restore {
 
     $game = ''
     if ($GamePath) { $game = $GamePath } else { $game = Find-GamePath }
-    if (-not $game) {
-        $game = Ask-GamePath
-    }
+    if (-not $game) { $game = Ask-GamePath }
     if (-not $game) { Write-Err '未能确定游戏目录。'; Pause-Any; return $false }
 
     $broot = Get-BackupRoot $game
@@ -337,7 +402,7 @@ function Show-Menu {
         Write-Host ''
         Write-Host '  ╔══════════════════════════════════════════════════╗' -ForegroundColor Cyan
         Write-Host '  ║   Prominence Poker  简体中文汉化补丁              ║' -ForegroundColor Cyan
-        Write-Host ("  ║   v" + $m.version.PadRight(46) + '║') -ForegroundColor Cyan
+        Write-Host ("  ║   v" + ([string]$m.version).PadRight(46) + '║') -ForegroundColor Cyan
         Write-Host '  ╚══════════════════════════════════════════════════╝' -ForegroundColor Cyan
         Write-Host ''
         Write-Host '    1  安装汉化'
