@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Prominence Poker 汉化 · 安装教程</title>
+<style>
+  :root{
+    --ink:#1a1c1b;
+    --ink-2:#4a514d;
+    --ink-3:#7c857f;
+    --line:#dfdcd4;
+    --paper:#f4f2ec;
+    --card:#ffffff;
+    --green:#0e5c40;
+    --green-2:#127a54;
+    --gold:#b8912f;
+    --red:#c23b30;
+    --ok:#1c8a5c;
+  }
+  *{box-sizing:border-box}
+  html{-webkit-text-size-adjust:100%}
+  body{
+    margin:0;
+    background:var(--paper);
+    color:var(--ink);
+    font-family:"Microsoft YaHei","PingFang SC","Hiragino Sans GB","Segoe UI",system-ui,-apple-system,sans-serif;
+    font-size:16px;
+    line-height:1.75;
+  }
+  .wrap{max-width:880px;margin:0 auto;padding:0 20px 80px}
+
+  /* ---------- 顶部 ---------- */
+  .hero{
+    background:
+      radial-gradient(1200px 400px at 15% -10%, #1c7a56 0%, transparent 60%),
+      linear-gradient(160deg,#0b3f2c 0%,#0e5c40 55%,#0a4a34 100%);
+    color:#fff;
+    padding:52px 0 44px;
+    position:relative;
+    overflow:hidden;
+  }
+  .hero:after{
+    content:"";
+    position:absolute;inset:0;
+    background-image:
+      repeating-linear-gradient(45deg, rgba(255,255,255,.035) 0 2px, transparent 2px 9px);
+    pointer-events:none;
+  }
+  .hero .wrap{padding-bottom:0;position:relative;z-index:1}
+  .kicker{
+    display:inline-block;
+    font-size:12.5px;letter-spacing:.18em;
+    color:#d9c07a;border:1px solid rgba(217,192,122,.45);
+    padding:3px 10px;border-radius:2px;margin-bottom:18px;
+  }
+  h1{
+    font-size:32px;line-height:1.35;margin:0 0 12px;
+    font-weight:700;letter-spacing:.01em;
+  }
+  .hero p{margin:0;color:#cfe0d7;font-size:15.5px;max-width:600px}
+  .chips{margin-top:22px;display:flex;flex-wrap:wrap;gap:10px}
+  .chip{
+    font-size:13px;padding:4px 11px;border-radius:999px;
+    background:rgba(255,255,255,.1);border:1px solid rgba(255,255,255,.16);
+    color:#eaf3ee;
+  }
+
+  /* ---------- 通用块 ---------- */
+  section{margin-top:38px}
+  .lead-card{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    padding:22px 24px;box-shadow:0 1px 2px rgba(20,30,25,.04);
+  }
+  .lead-card h2{font-size:16px;margin:0 0 12px;color:var(--ink)}
+  .lead-card ul{margin:0;padding-left:20px;color:var(--ink-2);font-size:15px}
+  .lead-card li{margin:5px 0}
+  .lead-card b{color:var(--ink)}
+
+  .step{
+    background:var(--card);border:1px solid var(--line);border-radius:10px;
+    margin-top:22px;overflow:hidden;box-shadow:0 1px 2px rgba(20,30,25,.04);
+  }
+  .step-head{
+    display:flex;gap:14px;align-items:flex-start;
+    padding:20px 24px 0;
+  }
+  .num{
+    flex:none;width:30px;height:30px;border-radius:50%;
+    background:var(--green);color:#fff;font-size:15px;font-weight:700;
+    display:flex;align-items:center;justify-content:center;
+    margin-top:2px;
+  }
+  .step-head h3{margin:0;font-size:19px;line-height:1.5}
+  .step-head .hint{display:block;font-size:13.5px;color:var(--ink-3);font-weight:400;margin-top:2px}
+  .step-body{padding:14px 24px 24px 68px}
+  .step-body p{margin:10px 0;color:var(--ink-2);font-size:15.5px}
+  .step-body p:first-child{margin-top:0}
+  .step-body ol,.step-body ul{margin:10px 0;padding-left:22px;color:var(--ink-2);font-size:15.5px}
+  .step-body li{margin:6px 0}
+  strong{color:var(--ink)}
+
+  .url{
+    display:block;margin:12px 0;padding:12px 14px;
+    background:#0f2d22;color:#9fe6c2;
+    border-radius:6px;font-family:Consolas,"Courier New",monospace;
+    font-size:13.5px;line-height:1.6;word-break:break-all;
+    text-decoration:none;border:1px solid #0b241b;
+  }
+  .url:hover{color:#c8f5dd}
+
+  /* ---------- 模拟窗口 ---------- */
+  .mock{
+    margin:16px 0 6px;border-radius:8px;overflow:hidden;
+    border:1px solid #cfcbc1;background:#fff;
+    box-shadow:0 2px 10px rgba(24,32,28,.07);
+    font-size:14px;
+  }
+  .mock-bar{
+    display:flex;align-items:center;gap:7px;
+    padding:9px 12px;background:#e9e6df;border-bottom:1px solid #d8d4cb;
+  }
+  .dot{width:9px;height:9px;border-radius:50%;background:#c4c0b7;flex:none}
+  .dot.r{background:#e07a70}.dot.y{background:#e3bf6a}.dot.g{background:#8fbf92}
+  .urlbox{
+    flex:1;margin-left:8px;background:#fff;border:1px solid #ddd9d0;border-radius:5px;
+    padding:3px 10px;font-family:Consolas,monospace;font-size:11.5px;color:#6b736e;
+    white-space:nowrap;overflow:hidden;text-overflow:ellipsis;
+  }
+  .gh{display:flex;gap:0;background:#fff}
+  .gh-main{flex:1;padding:16px 18px;min-width:0}
+  .gh-side{width:170px;flex:none;border-left:1px solid #eceae3;padding:16px 14px;background:#fbfaf7}
+  .gh-h{font-size:17px;font-weight:700;color:#1f2328;display:flex;align-items:center;gap:8px}
+  .tag{
+    font-size:10.5px;font-weight:600;padding:1px 7px;border-radius:999px;
+    background:#e6f4ec;color:#1a7f4b;border:1px solid #bfe3ce;letter-spacing:.02em;
+  }
+  .gh-sub{font-size:12px;color:#8b949e;margin-top:3px}
+  .assets-h{
+    margin-top:16px;padding-top:12px;border-top:1px solid #eceae3;
+    font-size:13px;font-weight:700;color:#1f2328;
+  }
+  .asset{
+    display:flex;align-items:center;gap:9px;
+    padding:8px 10px;margin-top:6px;border-radius:6px;
+    font-size:13px;color:#0b6bcb;position:relative;
+  }
+  .asset .size{color:#8b949e;font-size:11.5px;margin-left:auto}
+  .asset.dim{color:#9aa2a8;text-decoration:line-through;text-decoration-color:#cfd4d8}
+  .asset.dim .size{text-decoration:none}
+  .asset.hit{
+    background:#fff8f6;border:1.5px dashed var(--red);
+    color:#0b6bcb;font-weight:600;padding-right:88px;
+  }
+  .pin{
+    position:absolute;right:8px;top:50%;transform:translateY(-50%);
+    background:var(--red);color:#fff;font-size:11.5px;font-weight:700;
+    padding:2px 8px;border-radius:4px;white-space:nowrap;
+    box-shadow:0 2px 6px rgba(194,59,48,.3);
+  }
+  .side-h{font-size:12px;font-weight:700;color:#1f2328;margin-bottom:8px}
+  .side-item{font-size:12.5px;color:#57606a;padding:4px 0;display:flex;gap:6px;align-items:center}
+  .side-item.on{color:#1a7f4b;font-weight:600}
+
+  /* 资源管理器 */
+  .crumb{padding:8px 12px;background:#f7f6f2;border-bottom:1px solid #e6e3da;font-size:12.5px;color:#5d655f}
+  .crumb b{color:#2c322e}
+  .files{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;padding:14px}
+  .files.one{grid-template-columns:1fr}
+  .file{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+  .file{
+    display:flex;align-items:center;gap:8px;padding:8px 10px;border-radius:6px;
+    border:1px solid #eceadf;background:#fdfcfa;font-size:13px;color:#3c433e;
+    position:relative;
+  }
+  .file.hit{border:1.5px dashed var(--red);background:#fff8f6}
+  .file>*{min-width:0}
+  .file svg{flex:none}
+
+  .fig-cap{
+    padding:0 14px 12px;font-size:12.5px;color:var(--red);font-weight:600;
+  }
+
+  /* 终端 */
+  .console{background:#0c0c0c;border-color:#262626}
+  .console pre{
+    margin:0;padding:16px 18px;color:#d6d6d6;
+    font-family:Consolas,"Courier New",monospace;font-size:12.5px;line-height:1.75;
+    overflow-x:auto;white-space:pre;
+  }
+  .console .g{color:#54d68a}
+  .console .w{color:#e5c07b}
+  .console .hi{background:#1d3b2c;display:inline-block;width:100%}
+  .console .t{color:#eadfc0;font-weight:700}
+
+  /* ---------- 提示条 ---------- */
+  .note{
+    display:flex;gap:12px;padding:13px 16px;border-radius:8px;
+    font-size:14.5px;line-height:1.7;margin:14px 0;
+  }
+  .note .ico{flex:none;margin-top:3px}
+  .note.warn{background:#fdf5ec;border:1px solid #eddfc6;color:#7a5a1f}
+  .note.tip{background:#f0f7f2;border:1px solid #d3e6da;color:#255a3f}
+  .note.stop{background:#fdf2f1;border:1px solid #f0d5d2;color:#8a3129}
+  .note b{color:inherit}
+
+  /* ---------- FAQ ---------- */
+  details{
+    background:var(--card);border:1px solid var(--line);border-radius:8px;
+    padding:0;margin-top:10px;
+  }
+  details summary{
+    cursor:pointer;padding:14px 18px;font-size:15.5px;font-weight:600;
+    list-style:none;display:flex;justify-content:space-between;align-items:center;gap:12px;
+  }
+  details summary::-webkit-details-marker{display:none}
+  details summary:after{
+    content:"+";color:var(--gold);font-size:19px;font-weight:400;flex:none;
+  }
+  details[open] summary:after{content:"−"}
+  details .ans{padding:0 18px 16px;color:var(--ink-2);font-size:15px}
+  details .ans p{margin:6px 0}
+  details .ans code{
+    background:#f2f0e9;padding:1px 6px;border-radius:4px;
+    font-family:Consolas,monospace;font-size:13px;color:#3d4a42;
+  }
+
+  /* ---------- 复制块 ---------- */
+  .copybox{
+    background:#0f2d22;border-radius:8px;padding:16px 18px;margin-top:14px;
+    color:#d8ece1;font-size:14px;line-height:1.85;
+    font-family:"Microsoft YaHei",sans-serif;white-space:pre-wrap;
+    border:1px solid #0b241b;user-select:all;
+  }
+  .copybox .c-url{color:#9fe6c2;font-family:Consolas,monospace;word-break:break-all}
+
+  footer{
+    margin-top:46px;padding-top:22px;border-top:1px solid var(--line);
+    font-size:13px;color:var(--ink-3);line-height:1.85;
+  }
+  footer b{color:var(--ink-2)}
+
+  @media (max-width:640px){
+    h1{font-size:25px}
+    .step-body{padding:14px 18px 20px 18px}
+    .step-head{padding:18px 18px 0}
+    .gh-side{display:none}
+    .pin{position:static;transform:none;margin-left:auto;order:9}
+  }
+</style>
+</head>
+<body>
+
+<div class="hero">
+  <div class="wrap">
+    <div class="kicker">PROMINENCE POKER · 简体中文汉化</div>
+    <h1>安装教程：从打开网址到进游戏，一共 6 步</h1>
+    <p>不需要懂技术，不需要注册账号。照着下面的截图点就行，全程约 3 分钟。</p>
+    <div class="chips">
+      <span class="chip">Windows 10 / 11</span>
+      <span class="chip">补丁版本 v1.0.1</span>
+      <span class="chip">12.2 MB</span>
+      <span class="chip">可一键还原英文</span>
+    </div>
+  </div>
+</div>
+
+<div class="wrap">
+
+  <section>
+    <div class="lead-card">
+      <h2>开始之前，只确认两件事</h2>
+      <ul>
+        <li>游戏 <b>已经装好</b>，并且至少启动过一次（能正常进主菜单）。</li>
+        <li><b>游戏已经完全退出</b>。窗口关掉还不够，右下角托盘图标也要退出，任务管理器里搜不到 <code style="font-family:Consolas,monospace;font-size:13px">Prominence-Win64-Shipping.exe</code> 才算干净。<b>这一步不做，安装会失败。</b></li>
+      </ul>
+    </div>
+  </section>
+
+  <!-- 步骤 1 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="num">1</div>
+      <div>
+        <h3>打开下载页</h3>
+        <span class="hint">浏览器地址栏输入下面这个地址，回车</span>
+      </div>
+    </div>
+    <div class="step-body">
+      <a class="url" href="https://github.com/zhangjh-psy/prominence-poker-zhcn/releases/latest" target="_blank" rel="noopener">https://github.com/zhangjh-psy/prominence-poker-zhcn/releases/latest</a>
+      <p>打开后是这个页面。页面是英文的，<strong>不用管上面的介绍文字</strong>，只看下面这块带 <strong>Assets</strong> 的地方——文件都在那里。</p>
+
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <div class="urlbox">github.com/zhangjh-psy/prominence-poker-zhcn/releases/latest</div>
+        </div>
+        <div class="gh">
+          <div class="gh-main">
+            <div class="gh-h">v1.0.1 <span class="tag">Latest</span></div>
+            <div class="gh-sub">v1.0.1</div>
+            <div class="assets-h">Assets</div>
+            <div class="asset hit">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#57606a"><path d="M8.75 1.75a.75.75 0 0 0-1.5 0V8.2L5.03 5.98a.75.75 0 1 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.2V1.75Z"/><path d="M2 12.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"/></svg>
+              ProminencePoker-zhCN-v1.0.1.zip
+              <span class="size">12.2 MB</span>
+              <span class="pin">点这个</span>
+            </div>
+            <div class="asset dim">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#b6bcc1"><path d="M8.75 1.75a.75.75 0 0 0-1.5 0V8.2L5.03 5.98a.75.75 0 1 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.2V1.75Z"/><path d="M2 12.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"/></svg>
+              Source code (zip)
+              <span class="size">不点</span>
+            </div>
+            <div class="asset dim">
+              <svg width="15" height="15" viewBox="0 0 16 16" fill="#b6bcc1"><path d="M8.75 1.75a.75.75 0 0 0-1.5 0V8.2L5.03 5.98a.75.75 0 1 0-1.06 1.06l3.5 3.5a.75.75 0 0 0 1.06 0l3.5-3.5a.75.75 0 0 0-1.06-1.06L8.75 8.2V1.75Z"/><path d="M2 12.25a.75.75 0 0 1 .75-.75h10.5a.75.75 0 0 1 0 1.5H2.75a.75.75 0 0 1-.75-.75Z"/></svg>
+              Source code (tar.gz)
+              <span class="size">不点</span>
+            </div>
+          </div>
+          <div class="gh-side">
+            <div class="side-h">Releases</div>
+            <div class="side-item on">v1.0.1 <span class="tag">Latest</span></div>
+            <div class="side-item">v1.0.0</div>
+            <div class="side-item" style="color:#9aa2a8">v0.1.0-beta</div>
+          </div>
+        </div>
+      </div>
+
+      <div class="note tip">
+        <svg class="ico" width="17" height="17" viewBox="0 0 16 16" fill="#2f7a52"><path d="M8 1.5A6.5 6.5 0 1 0 8 14.5 6.5 6.5 0 0 0 8 1.5Zm.75 3.25a.75.75 0 0 0-1.5 0v3.5a.75.75 0 0 0 1.5 0v-3.5ZM8 10a.9.9 0 1 1 0 1.8A.9.9 0 0 1 8 10Z"/></svg>
+        <div>如果你打开的是仓库首页（网址里没有 <code style="font-family:Consolas,monospace">/releases</code>），点页面右侧的 <b>Releases</b>，再点最上面的 <b>v1.0.1</b>，往下拉到 <b>Assets</b> 就是同一个地方。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 步骤 2 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="num">2</div>
+      <div>
+        <h3>点那个 12.2 MB 的 zip 文件</h3>
+        <span class="hint">点一下就开始下载，几秒钟</span>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>文件名是 <strong>ProminencePoker-zhCN-v1.0.1.zip</strong>，后面标着 <strong>12.2 MB</strong>。点它，浏览器就开始下载了。</p>
+
+      <div class="note stop">
+        <svg class="ico" width="17" height="17" viewBox="0 0 16 16" fill="#a4382d"><path d="M6.4 1.6a1.85 1.85 0 0 1 3.2 0l5.2 9a1.85 1.85 0 0 1-1.6 2.78H2.8A1.85 1.85 0 0 1 1.2 10.6l5.2-9Zm1.6 3.6a.8.8 0 0 0-.8.8v3.2a.8.8 0 0 0 1.6 0V6a.8.8 0 0 0-.8-.8Zm0 6.1a.95.95 0 1 0 0 1.9.95.95 0 0 0 0-1.9Z"/></svg>
+        <div><b>千万别点 Source code (zip) 或 Source code (tar.gz)。</b>那是源代码包，里面没有安装好的文件，双击会提示「没有找到补丁数据」。有人就是点了这个才装不上的。</div>
+      </div>
+
+      <p>下载完成后，一般在浏览器的<strong>「下载」文件夹</strong>里，文件名大概长这样：</p>
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <div class="urlbox">此电脑 › 下载</div>
+        </div>
+        <div class="crumb"><b>下载</b></div>
+        <div class="files one">
+          <div class="file">
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="#c9a227"><path d="M3 2.5h6.2L13 6.3v7.2a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1Zm5.7 1.3v2.5h2.5l-2.5-2.5Z"/></svg>
+            ProminencePoker-zhCN-v1.0.1.zip
+          </div>
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 步骤 3 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="num">3</div>
+      <div>
+        <h3>解压这个 zip</h3>
+        <span class="hint">右键 → 全部解压缩</span>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>找到刚才下载的 zip 文件，<strong>右键点它</strong>，选<strong>「全部解压缩…」</strong>（Windows 11 可能是「解压缩全部」），然后点「解压」。得到一个同名的文件夹，双击进去，里面应该是这些：</p>
+
+      <div class="mock">
+        <div class="mock-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <div class="urlbox">此电脑 › 下载 › ProminencePoker-zhCN-v1.0.1</div>
+        </div>
+        <div class="crumb"><b>下载</b> › ProminencePoker-zhCN-v1.0.1</div>
+        <div class="files">
+          <div class="file hit">
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="#3f7fbf"><rect x="1.5" y="2.5" width="13" height="11" rx="1.2"/><path d="M1.5 5.6h13" stroke="#fff" stroke-width="1.1"/></svg>
+            一键汉化.bat
+          </div>
+          <div class="file">
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="#3f7fbf"><rect x="1.5" y="2.5" width="13" height="11" rx="1.2"/><path d="M1.5 5.6h13" stroke="#fff" stroke-width="1.1"/></svg>
+            install.bat
+          </div>
+          <div class="file">
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="#8b949e"><rect x="2" y="2" width="12" height="12" rx="1.2"/></svg>
+            patch.ps1
+          </div>
+          <div class="file">
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="#c9a227"><path d="M2.5 4h4l1 1.4h6v7.1a1 1 0 0 1-1 1h-10a1 1 0 0 1-1-1V4Z"/></svg>
+            payload
+          </div>
+          <div class="file">
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="#c9a227"><path d="M2.5 4h4l1 1.4h6v7.1a1 1 0 0 1-1 1h-10a1 1 0 0 1-1-1V4Z"/></svg>
+            LICENSES
+          </div>
+          <div class="file">
+            <svg width="17" height="17" viewBox="0 0 16 16" fill="#9aa2a8"><path d="M3 2.5h6.2L13 6.3v7.2a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V3.5a1 1 0 0 1 1-1Z"/></svg>
+            README.txt
+          </div>
+        </div>
+        <div class="fig-cap">红框里这个「一键汉化.bat」——双击它</div>
+      </div>
+
+      <div class="note warn">
+        <svg class="ico" width="17" height="17" viewBox="0 0 16 16" fill="#9a7220"><path d="M6.4 1.6a1.85 1.85 0 0 1 3.2 0l5.2 9a1.85 1.85 0 0 1-1.6 2.78H2.8A1.85 1.85 0 0 1 1.2 10.6l5.2-9Zm1.6 3.6a.8.8 0 0 0-.8.8v3.2a.8.8 0 0 0 1.6 0V6a.8.8 0 0 0-.8-.8Zm0 6.1a.95.95 0 1 0 0 1.9.95.95 0 0 0 0-1.9Z"/></svg>
+        <div>
+          <b>两个常见的错误：</b><br>
+          ① <b>不要在压缩包里直接双击</b> <code style="font-family:Consolas,monospace">一键汉化.bat</code>，必须先解压出来，否则文件找不到、会闪退。<br>
+          ② <b>不要把文件夹放进游戏安装目录</b>（<code style="font-family:Consolas,monospace">steamapps\common\Prominence Poker</code> 里面）。放桌面、下载文件夹都行。放在游戏目录里会干扰 Steam 校验。
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 步骤 4 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="num">4</div>
+      <div>
+        <h3>双击「一键汉化.bat」，输入 1 回车</h3>
+        <span class="hint">会弹出一个黑底菜单窗口</span>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>双击那个 <strong>一键汉化.bat</strong>。会弹出一个黑色的命令窗口，显示这样的菜单：</p>
+
+      <div class="mock console">
+        <div class="mock-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <div class="urlbox" style="background:#202020;border-color:#333;color:#8a8a8a">C:\Windows\System32\WindowsPowerShell\v1.0\powershell.exe</div>
+        </div>
+<pre>
+  <span class="t">Prominence Poker  简体中文汉化补丁   v1.0.1</span>
+  ────────────────────────────────────────────
+
+    1  安装汉化
+    2  还原英文原版
+    3  检查安装状态
+    0  退出
+
+  请选择: <span class="g">1</span>
+</pre>
+      </div>
+
+      <p>在光标处输入数字 <strong>1</strong>，然后按 <strong>回车</strong>。程序会先自动找游戏安装位置，然后开始校验和写入。</p>
+      <p>如果它<strong>弹出一个选择文件夹的窗口</strong>，说明没有自动找到。这时候选到这一层：</p>
+      <div class="url" style="color:#9fe6c2">D:\steam\steamapps\common\Prominence Poker</div>
+      <p style="font-size:14.5px;color:#7c857f">判断标准：这个文件夹里能看到 <code style="font-family:Consolas,monospace">Prominence</code> 这个文件夹和一个 <code style="font-family:Consolas,monospace">Prominence.exe</code>。选好后点「确定」。</p>
+    </div>
+  </section>
+
+  <!-- 步骤 5 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="num">5</div>
+      <div>
+        <h3>等它跑完，看到「安装完成」就好了</h3>
+        <span class="hint">大概 5～20 秒</span>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>正常情况下屏幕会输出这些内容，重点是最后出现 <strong>安装完成，共写入 44 个文件</strong>：</p>
+
+      <div class="mock console">
+        <div class="mock-bar">
+          <span class="dot r"></span><span class="dot y"></span><span class="dot g"></span>
+          <div class="urlbox" style="background:#202020;border-color:#333;color:#8a8a8a">管理员: Windows PowerShell</div>
+        </div>
+<pre>
+  Prominence Poker 简体中文汉化  v1.0.1
+  ----------------------------------------------------
+         游戏目录：D:\steam\steamapps\common\Prominence Poker
+
+  <span class="w">正在校验补丁文件…</span>
+  <span class="g">[OK]</span>   补丁文件校验通过（44 个文件）
+  <span class="g">[OK]</span>   已备份原始文件 44 个 → _zhCN_backup
+
+<span class="hi">  <span class="g">[OK]</span>   安装完成，共写入 44 个文件。</span>
+  启动游戏即可看到中文界面。
+  如需还原英文，再次运行本程序选择「还原英文」。
+</pre>
+      </div>
+
+      <div class="note tip">
+        <svg class="ico" width="17" height="17" viewBox="0 0 16 16" fill="#2f7a52"><path d="M8 1.5A6.5 6.5 0 1 0 8 14.5 6.5 6.5 0 0 0 8 1.5Zm.75 3.25a.75.75 0 0 0-1.5 0v3.5a.75.75 0 0 0 1.5 0v-3.5ZM8 10a.9.9 0 1 1 0 1.8.9.9 0 0 1 0-1.8Z"/></svg>
+        <div>它同时会把原文件备份到游戏目录里的 <code style="font-family:Consolas,monospace">_zhCN_backup</code> 文件夹，所以随时能还原，<b>不会破坏游戏本体</b>。看到「按任意键继续」时按一下空格就行。</div>
+      </div>
+    </div>
+  </section>
+
+  <!-- 步骤 6 -->
+  <section class="step">
+    <div class="step-head">
+      <div class="num">6</div>
+      <div>
+        <h3>从 Steam 启动游戏</h3>
+        <span class="hint">主菜单变成中文就成了</span>
+      </div>
+    </div>
+    <div class="step-body">
+      <p>打开 Steam，正常启动游戏。主菜单应该显示「快速开始 / 查找比赛 / 商店与仓库 / 角色 / 排行榜 / 帮助与选项」。</p>
+      <p>这个游戏<strong>没有语言切换菜单</strong>，它是跟随系统语言加载的。所以只要你的 Windows 是中文，装的补丁就会生效，不需要在游戏里找选项。</p>
+      <p style="font-size:14.5px;color:#7c857f">如果主菜单还是英文，先别急，去下面的「装完还是英文」看两步排查。</p>
+    </div>
+  </section>
+
+  <!-- FAQ -->
+  <section>
+    <h2 style="font-size:19px;margin:34px 0 4px">出问题了？按现象对号入座</h2>
+
+    <details>
+      <summary>弹出蓝色的「Windows 已保护你的电脑」</summary>
+      <div class="ans">
+        <p>这是 Windows 对没签名的小工具的标准提示，不是病毒。</p>
+        <p>点左边的 <b>「更多信息」</b>，出现「仍要运行」按钮，点它。如果按钮叫「运行」，直接点。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>杀毒软件报警 / 直接把文件删了</summary>
+      <div class="ans">
+        <p>汉化补丁改的是游戏资源文件，行为特征和某些恶意程序相似，360、火绒、Defender 经常误报。<b>这是误报。</b></p>
+        <p>处理办法：把解压出来的整个文件夹加入杀毒软件的<b>信任区 / 白名单</b>，然后重新解压一次（文件被删了要重新解），再运行。</p>
+        <p>实在不放心，可以先关掉杀毒软件再运行，装完再打开。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>窗口一闪就没了 / 双击没反应</summary>
+      <div class="ans">
+        <p>大概率是解压位置不对，或者权限被挡。</p>
+        <p>① 确认文件已经<b>完整解压</b>到普通文件夹（不是压缩包里面，也不在游戏目录里）。</p>
+        <p>② 右键 <code>一键汉化.bat</code> → <b>以管理员身份运行</b>。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>提示「没有找到补丁数据」</summary>
+      <div class="ans">
+        <p>说明你下的是源码包（<code>Source code (zip)</code>），不是发布包。</p>
+        <p>回到第 1 步，在这个页面里重新点 <b>ProminencePoker-zhCN-v1.0.1.zip</b>（12.2 MB 那个）。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>提示找不到游戏 / 让你手动选文件夹</summary>
+      <div class="ans">
+        <p>很正常，你的 Steam 库可能在非默认盘。手动选到这一层就行：</p>
+        <p><code>...\steamapps\common\Prominence Poker</code></p>
+        <p>判断标准：文件夹里能看到 <code>Prominence</code> 文件夹和 <code>Prominence.exe</code>。<b>不要选到 Prominence 里面，也不要选到 Content 里面。</b></p>
+        <p>不确定游戏装在哪：Steam 库里右键游戏 → 管理 → 浏览本地文件，直接就到这一层了。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>装完进游戏还是英文</summary>
+      <div class="ans">
+        <p>按顺序查三件事：</p>
+        <p>① <b>游戏当时是不是真的退出了。</b>最常见的原因是装的时候游戏还开着，文件被占用没写进去。完全退出后重装一次（选 1）。</p>
+        <p>② 再运行一次，选 <b>3 检查安装状态</b>。如果显示「文件匹配 44 / 44」，说明文件在，可能是加载问题，重启一次电脑再试。如果显示不匹配，说明被游戏更新覆盖了，重装。</p>
+        <p>③ 你的 Windows 系统语言如果不是中文，游戏可能会按系统语言走。这种情况下把系统语言临时改成中文再启动。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>想变回英文原版</summary>
+      <div class="ans">
+        <p>再运行一次 <code>一键汉化.bat</code>，在菜单里输入 <b>2</b>，回车。它会把备份的原文件复制回去。</p>
+        <p>如果备份被删了，也可以在 Steam 里右键游戏 → 属性 → 已安装文件 → <b>验证文件完整性</b>，会把游戏恢复成官方原版（汉化也会一起没）。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>Steam 更新游戏后，汉化没了</summary>
+      <div class="ans">
+        <p>正常现象。游戏更新会覆盖被改过的文件。</p>
+        <p>重新运行 <code>一键汉化.bat</code>，选 <b>1</b> 再装一次就行。如果这次出现「文件不匹配」的提示，先选 2 还原一次，再选 1 安装。</p>
+      </div>
+    </details>
+
+    <details>
+      <summary>游戏里有些字显示成方块或问号</summary>
+      <div class="ans">
+        <p>说明字体文件没装上（被杀毒软件拦掉的可能性最大）。</p>
+        <p>先选 <b>3 检查状态</b> 看匹配数，再重新安装一次。仍然不行的话，把这个情况反馈给我，我发个字体修复包。</p>
+      </div>
+    </details>
+  </section>
+
+  <!-- 复制版 -->
+  <section>
+    <h2 style="font-size:19px;margin:34px 0 4px">懒得看教程？把这段直接发给朋友</h2>
+    <p style="color:#7c857f;font-size:14.5px;margin-top:6px">下面是一段纯文字，微信/QQ 里长按复制粘贴即可。</p>
+    <div class="copybox">Prominence Poker 装中文的方法（3 分钟）：
+
+1. 打开这个网址：
+   <span class="c-url">https://github.com/zhangjh-psy/prominence-poker-zhcn/releases/latest</span>
+
+2. 点里面的 ProminencePoker-zhCN-v1.0.1.zip（12.2 MB）下载。
+   别点 Source code，那个装不了。
+
+3. 下载完右键 zip → 全部解压缩。
+   解压到桌面就行，别放进游戏文件夹。
+
+4. 进解压出来的文件夹，双击「一键汉化.bat」，
+   输入 1 回车，等它显示「安装完成」就好了。
+
+5. 从 Steam 启动游戏，主菜单就是中文了。
+   想还原英文：再运行一次，选 2。
+
+注意：装之前先把游戏完全退出（托盘也退）。</div>
+  </section>
+
+  <footer>
+    <b>说明</b>：这是玩家自制的非官方汉化补丁，只替换游戏内的文本与字体资源，不修改游戏逻辑、不涉及任何作弊或联机优势。<br>
+    安装器会把原文件备份到 <code style="font-family:Consolas,monospace">_zhCN_backup</code>，可随时完整还原。<br>
+    修改游戏客户端在技术上可能违反服务条款，请自行判断并承担风险。补丁版本 v1.0.1 · 共 1550 条文本全部汉化。
+  </footer>
+
+</div>
+</body>
+</html>
